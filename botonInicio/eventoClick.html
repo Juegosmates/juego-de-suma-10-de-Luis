@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title> click sobre circulo</title>
+
+  <style>
+
+  .boton{
+  	outline: none;
+  	border: 1px solid #363431;
+  	color: white;
+  	width: 140px;
+  	height: 60px;
+  	text-shadow: 0px -1px 1px black;
+  	font-size: 20px;
+  	border-radius: 5px;
+  	font-family: Helvetica;
+  	cursor: pointer;
+  	background-image: linear-gradient(#3aad02,#2c6f05);
+  }
+  .boton:active{
+  	background-image: linear-gradient(#2c6f05,#3aad02);
+  }
+  .boton:hover{
+  	box-shadow: 0px 0px 14px #3aad02;
+  }
+  .reloj{
+  	float: left;
+  	font-size: 80px;
+  	font-family: Courier,sans-serif;
+  	color: #363431;
+    margin:10px;
+    border: 1px solid gray;
+    width:150px;
+  }
+
+#relojes{
+    border:1px solid red;
+    overflow: auto;
+}
+
+#inicioPartida{
+    border:1px solid blue;
+    overflow: auto;
+  }
+
+  </style>
+
+  <script  src="js/jquery.js"></script>
+  <script type="text/javascript">
+
+  	$(document).ready(function(){
+
+
+//boton 1
+$("#btnInicio").click(function(){
+  cuentaAtras()
+})
+
+function cuentaAtras(){
+  setInterval(function(){
+    console.log("transcurridos 2 seg.")
+  }, 2000)
+}
+
+//botón 2
+var temp2
+var decremento2 = 10
+document.getElementById('Segundos2').innerHTML = decremento2
+
+$("#btnInicio2").click(function(){
+  cuentaAtras2()
+})
+
+function cuentaAtras2(){
+  temp2 = setInterval(function(){
+    decremento2 = decremento2 - 1
+    document.getElementById('Segundos2').innerHTML = decremento2
+    if(decremento2==0) {
+      clearInterval(temp2)
+    }
+  },1000);
+}
+
+// cronometro asociado a botón 3
+
+var temp3
+var decremento3 =10
+document.getElementById('Segundos3').innerHTML = decremento3
+
+$("#btnInicio3").click(function(){
+  temp3 =  setInterval(cuentaAtras31,1000)
+})
+
+function cuentaAtras31(){
+  decremento3 = decremento3 - 1
+  document.getElementById('Segundos3').innerHTML = decremento3
+  if(decremento3 == 0){
+    clearInterval(temp3)
+  }
+}
+
+$("#btnFinal3").click(function(){
+  clearInterval(temp3)
+})
+
+
+
+
+
+})
+
+  </script>
+
+</head>
+
+<body>
+<div id="relojes">
+  <div class="reloj" id="Segundos1">:00</div>
+  <div class="reloj" id="Segundos2">:00</div>
+  <div class="reloj" id="Segundos3"></div>
+  <div class="reloj" id="Segundos4">:00</div>
+</div>
+
+
+  <div id="inicioPartida">
+    <div class="reloj">
+      <button id="btnInicio" class="boton"> Inicio Partida </button>
+    </div>
+    <div class="reloj">
+      <button id="btnInicio2" class="boton"> Inicio Partida 2 </button>
+    </div>
+    <div class="reloj">
+      <button id="btnInicio3" class="boton"> Inicio Partida 3 </button>
+      <button id="btnFinal3" class="boton"> Final Partida 3 </button>
+    </div>
+    <div class="reloj">
+      <input type="button" class="boton" id="inicio" value="Start4 &#9658;" onclick="inicio()">
+    </div>
+  </div>
+
+
+
+<script>
+//boton 4
+function inicio(){
+  setInterval(cuentaAtras4,500)
+}
+function cuentaAtras4(){
+  console.log("manera 4 de pasar el tiempo")
+}
+
+</script>
+
+
+</body>
+
+</html>

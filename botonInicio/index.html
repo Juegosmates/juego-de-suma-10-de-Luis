@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title> click sobre circulo</title>
+  <link href="css/main.css" rel="stylesheet" type="text/css" />
+  <link href="css/style.css" rel="stylesheet" type="text/css" />
+  <style>
+
+#infoPartida{
+  width:450px;
+  height: 200px;
+  margin-left: 45px;
+  }
+
+#timeSec{
+  font-size: 45px;
+  font-family: Courier,sans-serif;
+  color: #363431;
+}
+
+#puntuation{
+  font-size: 45px;
+  font-family: Courier,sans-serif;
+  color: #363431;
+}
+#timeL{
+    background-color: palegreen;
+    box-shadow: 0px 4px 10px grey;
+    width: 120px;
+    text-align: center;
+    padding: 5px;
+    border: none;
+    border-radius: 10px;
+    float:left;
+    margin: 30px;
+  }
+
+  #scoreL{
+    background-color: palegreen;
+    box-shadow: 0px 4px 10px grey;
+    /* width: 300px; */
+    width:120px;
+    text-align: center;
+    padding: 5px;
+    margin: 30px;
+    border: none;
+    border-radius: 10px;
+    float:left;
+  }
+
+  #explicacion{
+    font: Helvetica;
+    background-color: palegreen;
+    width:120px;
+    text-align: center;
+    padding: 5px;
+    margin: 10px 30px 30px 30px;
+    border: none;
+    border-radius: 10px;
+    float:left;
+  }
+  .boton{
+    margin-top: 10px;
+    margin-left: 30px;
+    outline: none;
+    border: 1px solid #363431;
+    color: white;
+    width: 130px;
+    height: 60px;
+    text-shadow: 0px -1px 1px black;
+    font-size: 20px;
+    border-radius: 10px;
+    font-family: Helvetica;
+    cursor: pointer;
+    background-image: linear-gradient(#3aad02,#2c6f05);
+  }
+  .boton:active{
+    background-image: linear-gradient(#2c6f05,#3aad02);
+  }
+  .boton:hover{
+    box-shadow: 0px 0px 14px #3aad02;
+  }
+
+  </style>
+  <script src="js/howler.js"></script>
+  <script  src="js/jquery.js"></script>
+  <script type="text/javascript">
+
+  	$(document).ready(function(){
+
+      var e432 = document.getElementById('myCanvas432')
+      ctx432 = e432.getContext('2d');
+      var puntuacion = 0;
+      var sum = 0;
+      var mySound01, mySound02, mySound03
+
+//Efectos de sonido
+      mySound01 = new Howl({
+        src: ["media/click.wav"],
+        loop: false
+      })
+      mySound02 = new Howl({
+        src: ["media/wrong.mp3"],
+        loop: false
+      })
+      mySound03 = new Howl({
+        src: ["media/bien.flac"],
+        loop: false
+      })
+
+//Creación del objeto Bubble
+function Bubble(x,y,color){
+  this.x = x
+  this.y = y
+  this.color = color
+
+  //var suma
+  var n = Math.floor(Math.random()*9+1)
+  this.num = n
+
+  this.dibuja = function(){
+    var my_gradient = ctx432.createRadialGradient(this.x+25, this.y+20, 5, this.x+50, this.y+40, 55)
+    my_gradient.addColorStop(0, "rgb(169, 204, 227)");
+    my_gradient.addColorStop(1, "rgb(40,116,166)");
+    ctx432.fillStyle = my_gradient;
+    ctx432.fillRect(this.x, this.y, 50,60);
+
+    ctx432.fillStyle="rgb(10,10,10)"
+    ctx432.font = "31px Helvetica";
+    ctx432.fillText(this.num, this.x+17, this.y+40);
+  }
+
+  this.comprueba = function(x,y){
+        e432.addEventListener("click", function(event){
+          var elemTop = e432.offsetTop;
+          var elemLeft = e432.offsetLeft;
+          var yVal = event.pageY ;
+          var xVal = event.pageX;
+          this.y = y;
+          this.x = x;
+            if(yVal<this.y+55 && yVal>this.y && xVal<this.x+55 && xVal>this.x ){
+            // console.log("elemento clicado con el numero asociado: " + n );
+            sum += n;
+            mySound01.play();
+            ctx432.clearRect(this.x, this.y, 50, 60)
+                if(sum == 10){
+                mySound03.play()
+                score()
+              }
+              if (sum >10){
+                mySound02.play()
+                sum =0
+              }
+
+          }
+        },false);
+    }
+
+  }
+
+
+//Funciones
+
+//creación del array de instancias del objeto Bubble
+var time
+var timeDecrease
+function crearCartas(distY){
+var bubbles = new Array()
+  for (var i = 0; i<9;i++){
+  		    var x = i * 60 + 10
+  	      var y = distY
+  	      bubbles.push(new Bubble(x,y,"gold"))
+  	      bubbles[i].dibuja()
+  	      bubbles[i].comprueba(x,y)
+
+  }
+}
+
+$("#btnInicio").click(function(){
+
+  crearCartas(40)
+  crearCartas(140)
+  crearCartas(240)
+  crearCartas(340)
+
+  // countDown();
+  sum = 0
+  time = 10
+  document.getElementById('timeSec').innerHTML = time
+  timeDecrease = setInterval(countDown,1000)
+
+})
+
+function countDown(){
+  time = time - 1
+  document.getElementById('timeSec').innerHTML = time
+  if(time == 0){
+    finJuego();
+  }
+}
+
+//función score
+
+function score(){
+  puntuacion = puntuacion + 1;
+  sum = 0;
+  document.querySelector("#puntuation").textContent = puntuacion;
+}
+
+//función fin del Juego
+function finJuego(){
+    clearInterval(timeDecrease);    //para el contador
+    // keepScore(puntuacion,"Juego suma 10");
+    alert("Enhorabuena. Tu puntuacion ha sido de: " + puntuacion + " puntos")
+    location.reload()
+}
+
+
+    });
+
+  </script>
+
+</head>
+
+<body>
+<canvas id="myCanvas432" width=580 height=450 style="background-color: rgb(245,237,243)"></canvas>
+<div id="infoPartida">
+  <div id="timeL">
+      <span id="timeSec">seg.</span>
+  </div>
+
+  <div id="scoreL">
+      <span id="puntuation">punt.</span>
+  </div>
+    <button id="btnInicio" class="boton"> Inicio Partida </button>
+    <div id="explicacion"> Presiona numeros hasta que sumen 10</div>
+
+</div>
+
+
+</body>
+
+</html>
